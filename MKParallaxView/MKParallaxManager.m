@@ -29,14 +29,6 @@
 #import "MKParallaxManager.h"
 #import "MKGyroManager.h"
 
-#define zeroPointV 30.0f
-#define maxV 60.0f
-#define minV 0.0f
-#define zeroPointH 0.0f
-#define maxH 30.0f
-#define minH -30.0f
-#define sizePercentPadding 0.0163f
-
 @interface MKParallaxManager()
 /**
  Generates the current Frame based on the front facing angle and sideways tilt
@@ -63,6 +55,13 @@
     if (self)
     {
         [MKGyroManager sharedGyroManager];
+        self.zeroPointV = 30.0f ;
+        self.maxV = 700.0f ;
+        self.minV = 0.0f ;
+        self.zeroPointH = 0.0f ;
+        self.maxH = 30.0f ;
+        self.minH = -30.0f ;
+        self.sizePercentPadding = 0.03f ;
     }
     
     return self;
@@ -75,8 +74,8 @@
     CGFloat roll = [[MKGyroManager sharedGyroManager] roll];
     CGFloat pitch = [[MKGyroManager sharedGyroManager] pitch];
     
-    CGFloat frontAngle = zeroPointV;
-    CGFloat sideTilt = zeroPointH;
+    CGFloat frontAngle = self.zeroPointV;
+    CGFloat sideTilt = self.zeroPointH;
     
     UIViewController *orientationController = [[UIViewController alloc] init];
     
@@ -106,22 +105,22 @@
         frontAngle = frontAngle * -1;
     }
     
-    if (frontAngle > maxV)
+    if (frontAngle > self.maxV)
     {
-        frontAngle = maxV;
+        frontAngle = self.maxV;
     }
-    else if (frontAngle < minV)
+    else if (frontAngle < self.minV)
     {
-        frontAngle = minV;
+        frontAngle = self.minV;
     }
     
-    if (sideTilt > maxH)
+    if (sideTilt > self.maxH)
     {
-        sideTilt = maxH;
+        sideTilt = self.maxH;
     }
-    else if (sideTilt < minH)
+    else if (sideTilt < self.minH)
     {
-        sideTilt = minH;
+        sideTilt = self.minH;
     }
     
     return [self generateCurrentFrameUsingFrontAngle:frontAngle SideTile:sideTilt ViewFrame:viewFrame];
@@ -131,8 +130,8 @@
 #pragma mark - Private Methods
 - (CGRect)generateCurrentFrameUsingFrontAngle:(CGFloat)frontAngle SideTile:(CGFloat)sideTilt ViewFrame:(CGRect)viewFrame
 {
-    CGFloat widthSingleSidePadding = viewFrame.size.width * sizePercentPadding;
-    CGFloat heightSingleSidePadding = viewFrame.size.height * sizePercentPadding;
+    CGFloat widthSingleSidePadding = viewFrame.size.width * self.sizePercentPadding;
+    CGFloat heightSingleSidePadding = viewFrame.size.height * self.sizePercentPadding;
     
     CGFloat newWidth = viewFrame.size.width + (widthSingleSidePadding * 2);
     CGFloat newHeight = viewFrame.size.height + (heightSingleSidePadding * 2);
@@ -140,28 +139,28 @@
     CGFloat newX = 0 - widthSingleSidePadding;
     CGFloat newY = 0;
     
-    if (sideTilt > zeroPointH)
+    if (sideTilt > self.zeroPointH)
     {
-        CGFloat rightTiltPercent = sideTilt / maxH;
+        CGFloat rightTiltPercent = sideTilt / self.maxH;
         CGFloat shiftFromCenter = rightTiltPercent * widthSingleSidePadding;
         newX = newX - shiftFromCenter;
     }
-    else if (sideTilt < zeroPointH)
+    else if (sideTilt < self.zeroPointH)
     {
-        CGFloat leftTiltPercent = sideTilt / minH;
+        CGFloat leftTiltPercent = sideTilt / self.minH;
         CGFloat shiftFromCenter = leftTiltPercent * widthSingleSidePadding;
         newX = newX + shiftFromCenter;
     }
     
-    if (frontAngle > zeroPointV)
+    if (frontAngle > self.zeroPointV)
     {
-        CGFloat topTiltPercent = frontAngle / maxH;
+        CGFloat topTiltPercent = frontAngle / self.maxH;
         CGFloat shiftFromCenter = topTiltPercent * heightSingleSidePadding;
         newY = newY - shiftFromCenter;
     }
-    else if (frontAngle < zeroPointV)
+    else if (frontAngle < self.zeroPointV)
     {
-        CGFloat bottomTiltPercent = frontAngle / minH;
+        CGFloat bottomTiltPercent = frontAngle / self.minH;
         CGFloat shiftFromCenter = bottomTiltPercent * heightSingleSidePadding;
         newY = newY + shiftFromCenter;
     }

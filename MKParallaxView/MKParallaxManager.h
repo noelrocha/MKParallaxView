@@ -35,6 +35,14 @@
 
 @interface MKParallaxManager : NSObject
 
+@property (assign, nonatomic) float zeroPointV  ;
+@property (assign, nonatomic) float maxV ;
+@property (assign, nonatomic) float minV ;
+@property (assign, nonatomic) float zeroPointH ;
+@property (assign, nonatomic) float maxH ;
+@property (assign, nonatomic) float minH ;
+@property (assign, nonatomic) float sizePercentPadding ;
+
 /**
  Returns an inited instace of the parallax manager to work with
  @return standardParallaxManager The standard parallax manager
